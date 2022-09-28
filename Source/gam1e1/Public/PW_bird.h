@@ -21,6 +21,9 @@ private:
 		USpringArmComponent* CameraBoom;
 	UPROPERTY(EditAnywhere)
 		UCameraComponent* Camera;
+	UPROPERTY(EditAnywhere)
+		float jumpForce = 300.0f;
+
 public:
 	// Sets default values for this pawn's properties
 	APW_bird();
@@ -36,4 +39,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	void Jump();
 };

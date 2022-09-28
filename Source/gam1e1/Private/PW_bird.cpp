@@ -13,13 +13,23 @@ APW_bird::APW_bird()
 	Mesh->SetupAttachment(RootComponent);
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Boom"));
+	CameraBoom->SetupAttachment(Mesh);
+	CameraBoom->TargetArmLength = 600.0f;
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+
 }
 
 // Called when the game starts or when spawned
 void APW_bird::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Mesh->SetSimulatePhysics(true);
+	Mesh->BodyInstance.bLockXTranslation = true;
+	Mesh->BodyInstance.bLockYTranslation = true;
+	Mesh->BodyInstance.bLockRotation = true;
+
 }
 
 // Called every frame
@@ -34,5 +44,14 @@ void APW_bird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &APW_bird::Jump);
+}
+
+void APW_bird::Jump()
+{
+	//FString str = UTF8_TO_TCHAR("Ìø");
+	//FString str = UTF16_TO_TCHAR("Ìø");
+	UE_LOG(LogTemp, Warning, TEXT("jumping"));
+	Mesh->BodyInstance.SetLinearVelocity(FVector::UpVector * jumpForce, false);
 }
 
