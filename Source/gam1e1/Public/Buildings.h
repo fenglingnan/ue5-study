@@ -14,10 +14,18 @@ class GAM1E1_API ABuildings : public AActor
 private:
 	UPROPERTY(VisibleAnywhere)
 		TArray<UStaticMeshComponent*> Pillars;
-	UPROPERTY(EditdefaulsOnly)
+	UPROPERTY(EditAnywhere)
 		int NumPillars = 10;
-	UPROPERTY(EditdefaulsOnly)
-		float PillarsGap = 100.0f;
+	UPROPERTY(EditAnywhere)
+		float PillarsGap = 200.0f;
+	UPROPERTY(EditDefaultsOnly)
+		UStaticMesh* PillarMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+		USceneComponent* Root;
+
+	UFUNCTION(BlueprintCallable)
+		void SpawnPillars();
 
 public:	
 	// Sets default values for this actor's properties
@@ -26,6 +34,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void OnConstruction(const FTransform& Transform);
 
 public:	
 	// Called every frame
