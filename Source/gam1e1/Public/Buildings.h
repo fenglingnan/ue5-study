@@ -18,6 +18,10 @@ private:
 		int NumPillars = 10;
 	UPROPERTY(EditAnywhere)
 		float PillarsGap = 200.0f;
+	UPROPERTY(EditAnywhere)
+		float MoveSpeed = -100.0f;
+	UPROPERTY(EditAnywhere)
+		float ScreenWidth = 1000.0f;
 	UPROPERTY(EditDefaultsOnly)
 		UStaticMesh* PillarMesh;
 
@@ -26,6 +30,8 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 		void SpawnPillars();
+	UFUNCTION(BlueprintCallable)
+		void RandomSpawn();
 
 public:	
 	// Sets default values for this actor's properties

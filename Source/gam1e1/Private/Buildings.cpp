@@ -26,10 +26,19 @@ void ABuildings::SpawnPillars()
 			smc->SetMobility(EComponentMobility::Movable);
 			smc->AttachToComponent(Root, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 			smc->SetWorldLocation(GetActorLocation() + FVector(0, PillarsGap * i, 0));
-			smc->SetWorldScale3D(FVector(1, 1, FMath::RandRange(1, 4)));
+			//smc->SetWorldScale3D(FVector(1, 1, FMath::RandRange(1, 4)));
 			smc->SetStaticMesh(PillarMesh);
 			Pillars.Add(smc);
 		}
+	}
+	RandomSpawn();
+}
+
+void ABuildings::RandomSpawn()
+{
+	for (int i = 0; i < NumPillars; i++)
+	{
+		Pillars[i]->SetWorldScale3D(FVector(1, 1, FMath::RandRange(1, 6)));
 	}
 }
 
@@ -60,6 +69,13 @@ void ABuildings::OnConstruction(const FTransform& Transform)
 void ABuildings::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//move pillars
+	SetActorLocation(GetActorLocation() + FVector(0, MoveSpeed * DeltaTime, 0));
 
+	if (GetActorLocation().Y < -1*(PillarsGap * NumPillars+300))
+	{
+		SetActorLocation(GetActorLocation() + FVector(0, PillarsGap * NumPillars + ScreenWidth, 0));
+		RandomSpawn();
+	}
 }
 
