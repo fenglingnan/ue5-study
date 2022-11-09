@@ -15,6 +15,8 @@ class GAM1E1_API APW_bird : public APawn
 	GENERATED_BODY()
 
 private: 
+	UPROPERTY(EditDefaultsOnly)
+		USceneComponent* Root;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere)
@@ -41,4 +43,7 @@ public:
 
 
 	void Jump();
+
+	UFUNCTION()
+		void onMeshHit(UPrimitiveComponent * HitComp, AActor * otherActor, UPrimitiveComponent * otherComp, FVector NormalImpulse, const FHitResult);
 };

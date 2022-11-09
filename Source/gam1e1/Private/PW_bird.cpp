@@ -9,8 +9,19 @@ APW_bird::APW_bird()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//setup root
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
+
+	//set up mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+	Mesh->SetupAttachment(Root);
+	Mesh->BodyInstance.bLockXTranslation = true;
+	Mesh->BodyInstance.bLockYTranslation = true;
+	Mesh->BodyInstance.bLockRotation = true;
+	Mesh->BodyInstance.bLockXRotation = true;
+	Mesh->BodyInstance.bLockYRotation = true;
+	Mesh->BodyInstance.bLockZRotation = true;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Boom"));
 	CameraBoom->SetupAttachment(Mesh);
@@ -26,9 +37,6 @@ void APW_bird::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh->SetSimulatePhysics(true);
-	Mesh->BodyInstance.bLockXTranslation = true;
-	Mesh->BodyInstance.bLockYTranslation = true;
-	Mesh->BodyInstance.bLockRotation = true;
 
 }
 
@@ -53,5 +61,11 @@ void APW_bird::Jump()
 	//FString str = UTF16_TO_TCHAR("Ìø");
 	UE_LOG(LogTemp, Warning, TEXT("jumping"));
 	Mesh->BodyInstance.SetLinearVelocity(FVector::UpVector * jumpForce, false);
+}
+
+void APW_bird::onMeshHit(UPrimitiveComponent* HitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector NormalImpulse, const FHitResult)
+{
+	FString HitActorname = otherActor->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("hit by %s"), HitActorname);
 }
 
