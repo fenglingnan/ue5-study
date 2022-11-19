@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PW_bird.generated.h"
 
@@ -25,6 +26,8 @@ private:
 		UCameraComponent* Camera;
 	UPROPERTY(EditAnywhere)
 		float jumpForce = 300.0f;
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<class UUserWidget> WidgetClass;
 
 public:
 	// Sets default values for this pawn's properties
@@ -45,5 +48,5 @@ public:
 	void Jump();
 
 	UFUNCTION()
-		void onMeshHit(UPrimitiveComponent * HitComp, AActor * otherActor, UPrimitiveComponent * otherComp, FVector NormalImpulse, const FHitResult);
+		void onMeshHit(UPrimitiveComponent * HitComp, AActor * otherActor, UPrimitiveComponent * otherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

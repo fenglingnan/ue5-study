@@ -22,6 +22,7 @@ APW_bird::APW_bird()
 	Mesh->BodyInstance.bLockXRotation = true;
 	Mesh->BodyInstance.bLockYRotation = true;
 	Mesh->BodyInstance.bLockZRotation = true;
+	//
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Boom"));
 	CameraBoom->SetupAttachment(Mesh);
@@ -37,7 +38,11 @@ void APW_bird::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh->SetSimulatePhysics(true);
+	Mesh->BodyInstance.bNotifyRigidBodyCollision = true;
+	Mesh->OnComponentHit.AddDynamic(this, &APW_bird::onMeshHit);
 
+	GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeGameOnly());
+	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
 }
 
 // Called every frame
@@ -63,9 +68,16 @@ void APW_bird::Jump()
 	Mesh->BodyInstance.SetLinearVelocity(FVector::UpVector * jumpForce, false);
 }
 
-void APW_bird::onMeshHit(UPrimitiveComponent* HitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector NormalImpulse, const FHitResult)
+void APW_bird::onMeshHit(UPrimitiveComponent* HitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	FString HitActorname = otherActor->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("hit by %s"), HitActorname);
+	FString HitActorname = otherActor->GetFName().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("hit by %s"), *HitActorname);
+
+	GetWorld()->GetFirstPlayerController()->Pause();
+
+	UUserWidget* wdgRty = CreateWidget<UUserWidget>(GetGameInstance(), WidgetClass);
+	wdgRty->AddToViewport();
+	GetWorld()->GetFirstPlayerController()->SetInputMode(FInputModeUIOnly());
+	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 }
 
